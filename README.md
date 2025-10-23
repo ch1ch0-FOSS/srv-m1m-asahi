@@ -3,6 +3,17 @@
 **Purpose:**  
 This repository serves as both a professional public showcase of system administration and Linux infrastructure automation skills, and as a comprehensive fall-back for the solo admin (ch1ch0). It tracks all configuration, scripts, onboarding, and operational documentation for the Mac Mini (Apple Silicon M1) running Fedora Linux Asahi Remix.
 
+**Technical baseline** 
+Built on Fedora Asahi Remix: Server- the official Fedora flavor for Apple Silicon Macs. Kernel 6.1 + m1n1 boot chain, U-Boot, and GRUB providing native ARM64 support. 
+
+## 📈 Operational Metrics
+- Uptime: 99.98 % (tracked since July 2025)
+- Automated backups: nightly ⏰ 3 AM systemd timer
+- Restore tests: verified monthly
+- Data footprint: 1.2 TB across Forgejo + Nextcloud
+- Scripts automated: 10+
+
+
 ***
 
 ## Repo Structure
@@ -47,6 +58,48 @@ This repository serves as both a professional public showcase of system administ
 - **Security:** SELinux enforcing, strict firewall, key-based SSH, two sudo-capable users
 - **Metadata, user roles, SSH keys:** See `docs/system-setup-v1.0.md` & `docs/users.md`
 - **Backup & recovery:** Fully automated, with docs/scripts tracking every step (`scripts/*`, `docs/restore.md`)
+
+***
+
+┌─────────────────────────────────────────────────────────┐
+│                     Fedora Asahi Server (M1 Mac Mini)   │
+│─────────────────────────────────────────────────────────│
+│                Hardware Layer – Apple Silicon M1        │
+│   • NVMe SSD (/mnt/data)   • CPU: 8‑core ARM64  • 16 GB RAM │
+└──────────────┬──────────────────────────────────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│      Fedora Asahi Remix 42   │
+│  Kernel 6.16 + m1n1 Boot Chain│
+│  SELinux • firewalld • systemd│
+└──────────────┬────────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│        Core Services         │
+│  • Forgejo (Git Server)      │
+│  • Nextcloud (Storage/Sync)  │
+│  • Apache + PHP‑FPM (Web)    │
+│  • MariaDB (Database)        │
+└──────────────┬────────────────┘
+               │a
+               ▼
+┌──────────────────────────────┐
+│     Automation & Recovery Layer│
+│  • rsync Backups (systemd timer 3 AM)│
+│  • mysqldump Database Dumps   │
+│  • Scripts in /srv-m1m-asahi/scripts│
+│  • Docs: restore.md / ai‑handoff.md│
+└──────────────┬────────────────┘
+               │
+               ▼
+┌──────────────────────────────┐
+│        Access & Security      │
+│  • Key‑only SSH (logged per user)│
+│  • Two sudo administrators    │
+│  • Audit policies in users.md│
+└──────────────────────────────┘
 
 ***
 
@@ -116,5 +169,13 @@ This repository serves as both a professional public showcase of system administ
 
 Primary admin: ch1ch0  
 Direct all system queries or onboarding notes to docs/ai-handoff.md before change.
+
+***
+
+## 🧭 For Reviewers / Hiring Managers
+This repository demonstrates:
+- End‑to‑end Linux server deployment on non‑standard hardware (Apple M1)
+- System automation, documentation discipline, and audit‑ready operation
+- Adherence to enterprise standards: SELinux enforcing, key‑only SSH, FHS compliance
 
 ***
