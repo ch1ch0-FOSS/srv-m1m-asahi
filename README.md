@@ -7,7 +7,7 @@ This repository serves as both a professional public showcase of system administ
 Built on Fedora Asahi Remix: Server- the official Fedora flavor for Apple Silicon Macs. Kernel 6.1 + m1n1 boot chain, U-Boot, and GRUB providing native ARM64 support. 
 
 ## 📈 Operational Metrics
-- Uptime: 99.98 % (tracked since July 2025)
+- Uptime: 99% (tracked since July 2025)
 - Automated backups: nightly ⏰ 3 AM systemd timer
 - Restore tests: verified monthly
 - Data footprint: 1.2 TB across Forgejo + Nextcloud
@@ -54,7 +54,7 @@ Built on Fedora Asahi Remix: Server- the official Fedora flavor for Apple Silico
 
 - **Host:** Mac Mini (Apple Silicon M1), Fedora Linux Asahi Remix 42, kernel 6.16+
 - **Primary storage:** `/mnt/data` (SSD, FHS-aligned)
-- **Service stack:** Forgejo (git), Nextcloud (cloud/collab), plus future services for trading, 3D printing, automation/mining
+- **Service stack:** Forgejo (git), Nextcloud (cloud/collab), plus future services for professional trading
 - **Security:** SELinux enforcing, strict firewall, key-based SSH, two sudo-capable users
 - **Metadata, user roles, SSH keys:** See `docs/system-setup-v1.0.md` & `docs/users.md`
 - **Backup & recovery:** Fully automated, with docs/scripts tracking every step (`scripts/*`, `docs/restore.md`)
@@ -83,7 +83,7 @@ Built on Fedora Asahi Remix: Server- the official Fedora flavor for Apple Silico
 │  • Apache + PHP‑FPM (Web)    │
 │  • MariaDB (Database)        │
 └──────────────┬────────────────┘
-               │a
+               │
                ▼
 ┌──────────────────────────────┐
 │     Automation & Recovery Layer│
