@@ -1,0 +1,121 @@
+# ==========================================================
+#   Public Repository Ignore File (.gitignore_public)
+# ==========================================================
+#   Purpose:
+#   Prevent unnecessary, heavy, or system-dependent files from
+#   being committed to the public Forgejo and GitHub portfolio
+#   while ensuring documentation, automation scripts, and
+#   verified assets remain tracked.
+# ==========================================================
+
+# ----------------------------------------------------------
+# CORE STRUCTURE PROTECTION
+# ----------------------------------------------------------
+# Ignore system and local environment duplication artifacts
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+*.lock
+*.tmp
+*~
+__pycache__/
+.cache/
+node_modules/
+dist/
+build/
+.env
+*.bak
+*.old
+
+# ----------------------------------------------------------
+# PRIVATE OR LOCAL-SPECIFIC DIRECTORIES
+# ----------------------------------------------------------
+vault/
+vault/*
+backups/
+backups/*
+archive/
+archive-old/
+tmp/
+tmp/*
+
+# ----------------------------------------------------------
+# USER AND MEDIA CONTENT
+# ----------------------------------------------------------
+# Local screenshots, heavy binary assets, and test files
+users/*/screenshots/*
+users/*/temp/
+users/*/cache/
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.tiff
+*.psd
+*.xcf
+*.xcfb
+*.xcf~
+
+# Individual README placeholders are exceptions
+!users/*/screenshots/README.md
+
+# ----------------------------------------------------------
+# AUTOMATION AND LOG DATA
+# ----------------------------------------------------------
+logs/
+logs/*
+*.log
+*.out
+*.err
+*.gz
+
+# Backup and mirror verification logs (keep summaries only)
+automation/backup/*
+automation/orchestration/tmp/
+automation/monitoring/tmp/
+tmp_logs/
+*.tar
+*.zip
+
+# ----------------------------------------------------------
+# MACHINE-LEVEL CONFIGURATIONS
+# ----------------------------------------------------------
+/etc/
+/var/
+/run/
+srv/*
+shared/ollama/models/*
+
+# ----------------------------------------------------------
+# AI-COOP INTERNAL EXPERIMENTATION
+# ----------------------------------------------------------
+ai-coop/jobtracker/*.csv
+ai-coop/jobtracker/*.log
+ai-coop/checkpoints/private/
+ai-coop/snapshots/
+ai-coop/tmp/
+
+# Keep documentation and approved scripts
+!ai-coop/docs/
+!ai-coop/*.sh
+!ai-coop/*.md
+
+# ----------------------------------------------------------
+# PUBLIC PROJECT TEMPLATES AND DOC EXCEPTIONS
+# ----------------------------------------------------------
+!README.md
+!ROADMAP.md
+!EDITING_GUIDE.md
+!docs/
+!*.md
+!scripts/
+!automation/
+!core/
+
+# ----------------------------------------------------------
+# END OF FILE
+# Portfolio-safe public ignore policy.
+# ==========================================================
+
