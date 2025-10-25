@@ -1,0 +1,19 @@
+# 2025‑10‑24 — LibreOffice Calc Integration Milestone
+
+## Summary
+Added an installation automation script for **LibreOffice Calc**, enabling spreadsheet functionality for data analysis and project management on Fedora Asahi systems.
+
+This step integrates GUI productivity software into the system automation stack, complementing existing command‑line workflows.  
+Libre Calc supports both quantitative data work for trading analytics and CSV‑driven job‑application tracking.
+
+## Key Highlights
+- Introduced `core/scripts/install_libre_calc.sh` for reproducible deployment.
+- Verifies installation and version output automatically.
+- Demonstrates GUI application management via shell automation.
+- Marks a progression checkpoint in the portfolio’s “Essential Admin Tooling” segment.
+
+## Outcome
+✅ LibreOffice Calc installed successfully via automated script.  
+✅ Fully integrated into the `core/scripts/` directory for public reference.  
+✅ System‑wide tool now available for all user profiles.
+

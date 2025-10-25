@@ -262,6 +262,48 @@ https://wiki.archlinux.org/title/System_administration_best_practicesHere is a r
 - Keep this in version control (Forgejo/Nextcloud)
 
 ***
+---
+
+## 9. AI‑COOP Integration (v2.0 Roadmap Segment)
+
+This branch extends the core Fedora Asahi infrastructure into a Human–AI cooperative environment designed to host automation pipelines, documentation workflows, and system intelligence modules that support both administrative and professional tasks.
+
+**Focus Areas:**
+- Integrate AI and automation tooling under `/ai-coop/`
+- Maintain separation between system scripts (`/core/`), automation (`/automation/`), and Human–AI cooperation (`/ai-coop/`)
+- Expand `srv‑m1m‑asahi` from a personal infrastructure to a publishable portfolio and automation platform
+
+### Checkpoint 34 – AI‑Coop: Automated Job Tracker Conversion and CSV Pipeline (2025‑10‑24)
+**Description:**  
+Implemented a logging‑driven script (`checkpoint_automation_jobtracker.sh`) to convert and manage job application data across Markdown and CSV formats. Built to automate tracking, export to LibreOffice Calc, and commit updates to version control. This establishes an early fusion of AI documentation management and career operations automation.
+
+**Artifacts:**
+- `/ai-coop/jobtracker/checkpoint_automation_jobtracker.sh`
+- `/ai-coop/jobtracker/job-tracker-v2.md`
+- `/ai-coop/jobtracker/job-tracker-v2.csv`
+- Related commit: `Checkpoint 34 – Automation & Logging Pipeline`
+
+**Verification/Outcome:**
+- Markdown content converts into clean CSV via `awk` conversion.
+- Logs auto‑captured under `~/logs/`.
+- Prevents data drift through embedded Git commit routine.
+
+---
+
+### Future Milestones (v2.0+)
+
+| Milestone | Target Date | Objective |
+|:---|:---|:---|
+| Checkpoint 35 – AI‑Coop DataSync Daemon | Nov 2025 | Automate push/pull between Forgejo and Nextcloud data nodes using REST sync. |
+| Checkpoint 36 – LLM Task Orchestration | Dec 2025 | Integrate local LLM model (supervised by Ollama/Nomic) to handle document generation tasks within `/docs/ai-coop`. |
+| Checkpoint 37 – AI‑SysState Auditor | Jan 2026 | Develop an AI‑cooperative audit agent to evaluate system state, generate SELinux/firewalld reports, and update `system-index.md`. |
+| Checkpoint 38 – Continuous Coop Pipeline | Mar 2026 | Establish a feedback loop between AI assistants and human system tasks, mirroring Forgejo to GitHub and documenting training checkpoints. |
+
+---
+
+**AI‑COOP Roadmap Goal:**  
+Bridge human system administration skill development with AI‑based documentation and automation. Each AI‑COOP checkpoint will produce verifiable logs, committed scripts, and a paired `.md` file to serve as training evidence in your public portfolio.
+
 
 **Use this version as your single, authoritative system-setup baseline for audits, onboarding, and recovery. It is fully aligned with modern sysadmin best practices and ready to paste and track in your team's documentation.**
 
