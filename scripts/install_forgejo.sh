@@ -5,8 +5,8 @@
 # Arguments: None
 # Outputs: Installation logs, system changes, status messages.
 # Dependencies: mariadb-server, git, git-lfs, wget
-# Maintainer: [YOUR NAME]
-# Last Modified: [DATE]
+# Maintainer: ch1ch0
+# Last Modified: 2025-10-25
 
 set -euo pipefail
 

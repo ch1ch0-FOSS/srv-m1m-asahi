@@ -1,0 +1,38 @@
+# Incident Response Log
+
+**Incident #:** [Tracking/Ref code or sequential ID]  
+**Date/Time Detected:** [YYYY-MM-DD HH:MM]  
+**Detected by:** [User/System/Alerting tool]
+
+---
+
+## Impact
+
+- [Affected services/users/systems]
+- [Severity (Critical/High/Medium/Low), business risk]
+
+## Timeline
+
+| Time        | Event/Action                                   |
+|-------------|------------------------------------------------|
+| HH:MM am/pm | [Incident detection/alert/first symptom]       |
+| HH:MM am/pm | [Key actions taken, by whom]                   |
+| ...         | ...                                            |
+
+## Root Cause Analysis
+
+- [Short description of underlying cause]
+
+## Response & Recovery Steps
+
+1. [Step-by-step: diagnosis, commands run, configs checked]
+2. [Steps to mitigate, recovery commands or rollbacks]
+
+## Communication Log (optional)
+
+- [Internal/external notifications, status emails]
+
+## Remediation & Lessons Learned
+
+- [What to fix, policies/processes to improve]
+- [Documentation or script changes to prevent recurrence]

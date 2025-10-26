@@ -172,3 +172,161 @@ Demonstrate technical and AI-assisted sysadmin workflows with visible, version-c
 
 ***
 
+Here is a **sanitized public version** of your `system-setup-v1.0.md`. All sensitive user-specific details, custom paths, and internal admin hints were removed or generalized, while keeping technical and architectural clarity for educational/public-facing purposes.
+
+***
+
+# Fedora Asahi M1 Server Baseline – Public Version (v1.0-public)
+
+_Audit-ready. FHS-aligned. Current as of 2025-10-25._
+
+***
+
+## 1. System Summary
+
+- **Hardware:** Apple Silicon M1 (Mac Mini)
+- **OS:** Fedora Linux Asahi Remix 42 – Kernel 6.16+
+- **Network:** Static LAN assignment
+- **Storage:**
+    - `/mnt/data` (primary SSD)
+    - `/mnt/fastdata` (secondary SSD)
+- **SELinux:** Enforcing
+
+***
+
+## 2. User Accounts and Privileges
+
+| User | Home Directory | Shell | Sudo | Purpose |
+| :-- | :-- | :-- | :-- | :-- |
+| (admin) | Standard path | zsh | Yes | System administration |
+| (user1) | Standard path | bash | Yes | Daily/portfolio use |
+| (service) | Standard path | nologin | No | App/service accounts |
+
+_Only primary sysadmin and one user account have sudo rights. Other users are for service isolation only._
+
+***
+
+### Multi-Desktop Environment Integration
+
+**Purpose:** Enable and document multiple desktop environments (e.g., GNOME, KDE) for demonstration/multi-user flexibility.
+
+**Artifacts:**
+
+- Generic install scripts, troubleshooting notes, and changelog entries published as public examples.
+
+**Key Lessons:**
+
+- Some display managers may not support custom or complex home directory setups. Solutions documented in troubleshooting.
+
+***
+
+## 3. Security and Access
+
+- **SSH:** Key-based authentication only. No password/root SSH logins.
+- **SELinux:** Enforcing mode at all times.
+- **Firewall:** Public zone, limited to required inbound ports (SSH, HTTP, HTTPS).
+- **Note:** After firewall or SELinux changes, relabel/reload as per Fedora/SELinux best practices.
+
+***
+
+## 4. Filesystem Organization
+
+- **Main Mountpoints:** `/mnt/data`, `/mnt/fastdata`
+- **Directory Layout (FHS-aligned):**
+    - `/mnt/data/srv/[app]`        – Application/service data
+    - `/mnt/data/var/lib/[app]`    – App persistent state
+    - `/mnt/data/var/log/[app]`    – App logs
+    - `/mnt/data/etc/[app]`        – Application configs
+    - `/mnt/data/archive-old`      – Archived/deprecated data
+
+***
+
+## 5. Provisioning Checklist \& Timeline
+
+| Stage | Description |
+| :-- | :-- |
+| Install \& Network | Base OS setup, static IP config, SSH test |
+| Account/Security | User creation, SSH keys, sudo lockdown |
+| Firewall Setup | Configure zones and limit open ports |
+| Base Updates | System updates, baseline tool install |
+| Group/Sudo Audit | Review wheel/group, adjust as needed |
+| Storage Verification | Confirm mountpoints, data structure |
+| Multi-DE Demo | Add/verify GNOME, KDE, or other DEs |
+
+
+***
+
+## 6. Service Deployments
+
+### Forgejo
+
+- Self-hosted git server, MariaDB backend.
+- Repositories/logs stored in service-aligned data directories.
+- Web interface running on the configured port.
+
+
+### Nextcloud
+
+- Installed via RPM, uses MariaDB, PHP, and Redis.
+- Data isolated under designated data directories, strict security context.
+- Functionality verified via web and desktop clients.
+
+***
+
+## 7. Backup \& Restore Strategy
+
+### Backups
+
+- Scheduled scripted backups for all services and databases.
+- Timestamped backup directories by service.
+- Database dumps integrated per job run.
+- Schedule handled by cron/systemd timer.
+- No secrets in scripts/in logs; credentials handled securely.
+
+
+### Restore
+
+- Restoration of files/services using standard Fedora tools (`rsync`, database import).
+- Steps documented generically without internal implementation specifics.
+- Regular test restores recommended.
+
+
+### Retention
+
+- Outdated backup sets pruned as per compliance/policy.
+- Retention periods adjustable for environment scale.
+
+***
+
+## 8. Improvement Roadmap – Public Segment
+
+- Finalize/expand public documentation on backup practices and recovery workflows.
+- Continue regular privilege audits and filesystem health checks.
+- Publicly document major system upgrades and milestone events.
+
+***
+
+## 9. AI \& Automation Integration Preview
+
+Intent to expand open-sourced platform for Human–AI collaborative sysadmin, automated documentation, and reproducible infrastructure best practices.
+
+**Highlights:**
+
+- Modular automation and documentation for rapid learning or demonstration.
+- Future-proof separation of private/internal, and public/educational artifacts.
+
+| Milestone | Projected Date | Public Objective |
+| :-- | :-- | :-- |
+| DataSync Service | Nov 2025 | Demonstrate cross-system sync |
+| LLM Orchestration | Dec 2025 | Basic language model integration |
+| State Auditing | Jan 2026 | Automated audit/playbook sample |
+| Ongoing | Continuous | Feedback loops, system improvements |
+
+
+***
+
+**Goal:**
+Provide transparent, reproducible system setup examples for the community, always sanitized to protect operational security and privacy.
+
+***
+

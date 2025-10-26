@@ -1,0 +1,33 @@
+# System Upgrade/Patch Log
+
+**Date:** [YYYY-MM-DD]  
+**Admin:** [username/team]
+
+---
+
+## Pre-Upgrade Checks
+
+- [x] Backup taken? (files, DBs, configs—describe how)
+- [x] Change window scheduled?
+- [x] Users notified? (optional)
+
+## Steps Performed
+
+1. [Update/patch command or tool run]
+   - `sudo dnf update --refresh` / `sudo apt upgrade`
+2. [Services restarted, files merged, configs reviewed]
+3. [Any issues/rollback commands used]
+
+## Validation Post-Patch
+
+- [x] System boots correctly
+- [x] Key services checked with `systemctl status`
+- [x] Application(s) tested by end-user
+
+## Issues/Workarounds
+
+- [Describe any issues, fixes tried, new bugs found]
+
+## Follow-up
+
+- [What to monitor, additional testing, update documentation?]

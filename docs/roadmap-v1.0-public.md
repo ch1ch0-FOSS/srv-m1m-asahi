@@ -1,3 +1,7 @@
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+
+# here is the system roadmap to sanitize
+
 # Fedora Asahi Server: AI Handoff \& Buildout Plan
 
 ## Project Vision
@@ -240,4 +244,154 @@ echo "=== Checkpoint X completed at $(date) ==="
 - Automation Templates – `srv‑m1m‑asahi/core/scripts/`
 
 ***
+
+Here is your **sanitized public version** of the system roadmap (`roadmap-v1.0-public.md`). This copy is ready for placement in `srv-m1m-asahi/docs/`—with internal device IDs, usernames, or specific admin notes generalized, and a strong focus on reproducibility and documentation best practices.
+
+***
+
+# Fedora Asahi Server: AI Handoff \& Buildout Plan (Public)
+
+## Project Vision
+
+Set up a world-class, reproducible, and secure Fedora Asahi Linux server environment—documented from bare metal to production for portfolio, training, and disaster recovery.
+Primary hosted services: Nextcloud (cloud suite), Forgejo (version control), multi-DE (GNOME/KDE), and automation-ready AI components.
+
+***
+
+## Handoff Instructions (for Human or AI Collaborator)
+
+- **Goal:**
+At every major checkpoint, produce:
+    - A Markdown documentation file (`SYSTEM_SETUP.md` or wiki entry) with current state, configurations, actions, rationale.
+    - A companion shell script (`setup_checkpoint_<n>.sh`) with just the commands required.
+- **Checkpoints:**
+Any significant configuration (user, network, security, package, or application/automation change).
+- **AI assistants:**
+    - Clarify any ambiguity prior to running configs/scripts.
+    - Summarize results in both `.md` and `.sh` at each checkpoint.
+
+***
+
+## Project Outline \& Checkpoints
+
+### 1 — Initial System Install \& Access  ✅
+
+- Base OS install, network config, first login.
+- Document image versions and initial boot info.
+
+
+### 2 — User \& SSH Setup  ✅
+
+- Create core accounts; assign shells.
+- Harden SSH (key-based only), test authentication, check permissions/SELinux.
+- **Artifacts:** `SYSTEM_SETUP.md` (users, SSH), `setup_checkpoint_01.sh`
+
+
+### 3 — Firewall \& Security  ✅
+
+- Enable/configure firewalld; allow SSH/HTTP/HTTPS only.
+- Enforce SELinux, validate via firewall/SELinux status.
+- **Artifacts:** `SYSTEM_SETUP.md` (firewall, SELinux), `setup_checkpoint_02.sh`
+
+
+### 4 — System Update \& Essential Tools  ✅
+
+- Apply updates.
+- Install baseline tools (`dnf`, `htop`, `ncdu`, `git`, `vim`).
+- Save package list for transparency/reproducibility.
+
+
+### 5 — Sudo / Privileges \& Groups  ✅
+
+- Configure `/etc/sudoers`, audit wheel/privileged access.
+- Document permissions/privilege assignments.
+
+
+### 6 — Application Preparation  ✅
+
+- Prepare and verify FHS-aligned storage.
+- Plan out service/data directories for key apps (Nextcloud, Forgejo, etc).
+
+
+### 7 — Application Deployment  🚧 In Progress
+
+- Nextcloud: ✅
+- Forgejo: ✅
+- Trading Environment (OpenBB / Ollama): ✅
+- GNOME / KDE Multi-DE: ✅ Checkpoint 33 (2025-10-25)
+- AI-Coop Job Tracker: ✅ Checkpoint 34 (2025-10-25)
+
+
+### 8 — Maintenance \& Backup Strategy  ✅
+
+- Automate scheduled backups (scripted, with systemd timers).
+- Run periodic restore tests and document results.
+
+***
+
+## Checkpoint Documentation Template
+
+### Markdown (Documentation)
+
+```markdown
+## Checkpoint X — <Short Title, Date>
+
+**Description:**  
+Briefly describe the goal, approach, and results. List any scripts produced.
+
+**Commands / Configuration:**
+```
+
+
+# All config and validated shell commands for this checkpoint.
+
+```
+
+**Verification / Outcome:**
+- List expected system state upon completion.
+- Include key verification/log output.
+```
+
+
+### Shell Script (Automation Template)
+
+```bash
+#!/usr/bin/env bash
+#===============================================================================
+# Checkpoint X — <Short Title, Date>
+# Purpose: <High-level summary of automation>
+#===============================================================================
+
+set -euo pipefail
+IFS=$'\n\t'
+
+echo "=== Starting Checkpoint X at $(date) ==="
+
+# Commands to reproduce this checkpoint go here, in order.
+
+echo "=== Checkpoint X completed at $(date) ==="
+```
+
+
+***
+
+## References
+
+- Asahi Linux Documentation: https://asahilinux.org/docs/
+- Fedora Asahi Remix Docs: https://docs.fedoraproject.org/en-US/fedora-asahi-remix/
+- Automation Templates: `srv-m1m-asahi/scripts/core/`
+
+***
+
+**All shell scripts and documentation in this roadmap are sanitized for public sharing. Internal system identifiers, credentials, and sensitive information are removed in accordance with security standards.**
+
+***
+
+All config, user/account specifics, and low-level internal notes have been abstracted or omitted for safe public presentation and version control.[^1][^2]
+
+<div align="center">⁂</div>
+
+[^1]: https://www.itglue.com/blog/naming-conventions-examples-formats-best-practices/
+
+[^2]: https://datamanagement.hms.harvard.edu/plan-design/file-naming-conventions
 
