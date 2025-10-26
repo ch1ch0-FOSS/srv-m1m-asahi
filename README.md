@@ -1,184 +1,196 @@
-# \# 🛠️ admin‑toolkit
+# srv-m1m-asahi
 
-**Linux System Administration Tools \& Best Practices**
+**Enterprise-Grade Fedora Asahi Infrastructure – Built from Scratch**
 
-A curated collection of scripts, configuration templates, and documentation developed through managing the Fedora Asahi M1 infrastructure (`srv‑m1m‑asahi`). Each tool embodies simplicity, repeatability, and clear documentation.
-
----
-
-## 📋 Contents
-
-| Directory | Description |
-| :-- | :-- |
-| **scripts/** | Bash utilities for backups, monitoring, permission resets, and system verification |
-| **templates/** | systemd unit stubs, bash headers, log docstrings |
-| **docs/** | Usage guides and troubleshooting notes per tool |
-
+A production-ready, self-hosted Linux server demonstrating system architecture, automation, and operational discipline on Apple Silicon hardware. This repository serves as a living portfolio of system administration expertise and infrastructure-as-code practices.
 
 ---
 
-## 🚀 Featured Tools
+## 🖥️ System Overview
 
-### backup_all.sh
+**Hardware:** Apple Mac mini (M1, 2020)  
+**OS:** Fedora Linux Asahi Remix 42 (Kernel 6.16.8)  
+**Architecture:** aarch64 (Apple Silicon)  
+**Uptime Philosophy:** Production-stable, security-hardened, audit-ready
 
-Creates comprehensive rsync + MariaDB snapshot backups executed by a nightly systemd timer.
-
-### setup_checkpoint.sh
-
-Baseline configuration checkpoint utility – generates FHS verification, package manifest, and user snapshot.
-
-### fedora_bootstrap.sh
-
-Automates post‑install setup for new Fedora systems, ensuring SELinux enforcement, firewall activation, SSH hardening, and base package installations.
-
----
-
-## 💡 Best Practices and Philosophy
-
-- **KISS Principle:** clear, concise, repeatable code.
-- **Document Every Change:** commits must reference corresponding doc updates.
-- **Automation First:** anything done twice gets scripted.
-- **Security by Default:** enforce SELinux, firewalld, key‑only SSH.
+### Key Characteristics
+- **SELinux:** Enforcing mode for mandatory access control
+- **Firewall:** Active firewalld with minimal attack surface
+- **Storage Strategy:** Data-device separation via FHS-compliant external SSD mounts
+- **Service Isolation:** Dedicated system users per workload (sysadmin, trading, ch1ch0)
+- **Backup Regime:** Automated nightly snapshots with systemd timers
 
 ---
 
-## 🎓 Learning Outcomes / Skill Demonstration
+## 📂 Directory Structure
 
-Demonstrates proficiency in:
+srv-m1m-asahi/
+├── ai-coop/ # Human-AI collaboration workflows and checkpoints
+├── automation/ # Backup scripts, monitoring, orchestration
+├── changelog/ # Version-controlled system change log
+├── docs/ # Public-facing documentation and guides
+├── scripts/ # Infrastructure-as-code setup and deployment scripts
+└── users/ # User-specific configs and portfolio artifacts
 
-- Shell scripting and automation
-- System init and service management via systemd
-- Linux package and user administration
-- Robust logging and backup strategies
-- Reproducible configuration design
+
+### Storage Architecture (FHS-Aligned)
+
+**Primary Mount:** `/mnt/data` (7.28 TiB SSD)  
+**Backup Mount:** `/mnt/fastdata` (1.82 TiB SSD)
+
+All user homes symlinked to `/mnt/data/[username]` for data persistence and backup efficiency:
+- `/home/sysadmin → /mnt/data/sysadmin`
+- `/home/ch1ch0 → /mnt/data/ch1ch0`
+- `/home/trading → /mnt/data/trading`
+
+Service data lives under `/mnt/data/srv/` and `/mnt/data/var/lib/`:
+- Forgejo (git server)
+- Nextcloud (file sync and collaboration)
+- Trading stack (OpenBB, Ollama LLMs, IBKR/ThinkorSwim integration)
 
 ---
 
-## 💾 Usage Example
+## 🛠️ Core Services
 
-Clone and inspect
+| Service | Purpose | Status |
+|---------|---------|--------|
+| **Forgejo** | Self-hosted Git server with GitHub mirroring | Operational |
+| **Nextcloud** | Private cloud storage and file sync | Operational |
+| **Trading Stack** | Algorithmic trading infrastructure (OpenBB + Ollama) | In Development |
+| **Mastodon** | Federated social media instance | Planned |
+| **Matrix**  |                                  | Planned | 
+---
 
-git clone [https://github.com/ch1ch0-FOSS/admin-toolkit.git](https://github.com/ch1ch0-FOSS/admin-toolkit.git)
-cd admin-toolkit/scripts
+## 👥 User Profiles
 
-\# Run maintenance script in dry‑run mode
-bash backup_all.sh --dry-run
+### sysadmin
+**Role:** Infrastructure architect and sole administrator  
+**Scope:** System buildout, security hardening, automation development  
+**Environment:** Sway (Wayland tiling WM) for minimal overhead and keyboard-driven workflow
+
+### ch1ch0
+**Role:** Daily workstation and multi-environment demonstration  
+**Scope:** GNOME and KDE Plasma showcase, portfolio development, web presence  
+**Purpose:** Proof of desktop environment administration and user experience design
+
+### trading
+**Role:** Enterprise trading operations  
+**Scope:** Stock and options analysis using OpenBB, Ollama-powered LLMs, broker integrations  
+**Purpose:** Building a professional-grade algorithmic trading company from the ground up
 
 ---
 
-## 🧭 For Reviewers / Hiring Managers
+## 🔒 Security & Access Control
 
-This repository highlights:
+- **SSH Authentication:** Key-based only (ed25519), password auth disabled
+- **Sudo Access:** Restricted to `sysadmin` and `ch1ch0` via wheel group
+- **SELinux:** Enforcing mode for defense-in-depth
+- **Firewall:** firewalld with default-deny posture
+- **Mobile Admin:** Pixel Fold with GrapheneOS configured as secure remote admin terminal
 
-- Practical server automation applied to a live Fedora Asahi environment
-- Enterprise‑style documentation and process discipline
-- Real‑world troubleshooting reflected in commits and docs
+---
 
-Perfect — that README already demonstrates strong technical maturity and structure.
-Let’s expand it slightly so it ties seamlessly into your **srv‑m1m‑asahi public portfolio**, while cleanly referencing the **private admin toolkit** and **AI‑Coop automation layers**.
+## 💾 Backup & Disaster Recovery
 
-Below is a **ready‑to‑paste, fully optimized version** for `/mnt/data/srv‑m1m‑asahi/README.md` — it complements your `.gitignore_public`, the `docs/roadmap‑v1.0.md`, and your dual‑environment workflow.
+**Strategy:** Automated nightly backups via systemd timers and rsync
 
-***
+**Coverage:**
+- All user home directories (`/mnt/data/{sysadmin,ch1ch0,trading}`)
+- Service data (Forgejo repositories, Nextcloud files)
+- Database dumps (MariaDB for Forgejo/Nextcloud)
 
-# 🧭 Fedora Asahi Infrastructure Portfolio
+**Backup Location:** `/mnt/fastdata/backups/` with timestamp-based retention  
+**Testing:** Monthly restore drills documented in private sysadmin logs
 
-**Documentation‑Driven System Administration \& Automation**
+---
 
-This repository is a **public‑facing portfolio** of the live Fedora Asahi M1 server (`srv‑m1m‑asahi`) — engineered for reproducibility, auditability, and hybrid AI‑human workflow demonstration.
-It mirrors production‑grade practices developed within the corresponding private `admin‑toolkit` repository.
+## 🤖 Automation & Infrastructure-as-Code
 
-***
+All system configuration is scripted for repeatability and auditability:
 
-## 📁 Repository Contents
+### Key Scripts
+- `fedora_bootstrap.sh` – Initial system hardening and package baseline
+- `setup_checkpoint_*.sh` – Incremental infrastructure buildout stages
+- `install_forgejo.sh` – Git server deployment
+- `install_nextcloud.sh` – Cloud storage setup
+- `setup_trading_user_openbb_ollama.sh` – Trading environment provisioning
 
-| Directory | Purpose |
-| :-- | :-- |
-| `core/` | Baseline setup checkpoints and installation scripts (e.g., packages, sudo policy, network hardening) |
-| `automation/` | Backup and maintenance scripts with systemd integration |
-| `ai‑coop/` | AI‑assisted workflow and documentation automation (checkpoints 33–38) |
-| `docs/` | System setup records, roadmaps, troubleshooting guides, and changelogs |
-| `scripts/` | General automation and utility shell scripts |
-| `users/` | Portfolio materials for user environments (e.g., GUI screenshots for GNOME/KDE) |
+### Naming Convention
+- Standard files: `lowercase-with-hyphens.md`
+- Executable scripts: `lowercase_with_underscores.sh`
+- Acronyms: `ALL-CAPS` for semantic clarity (e.g., `FHS`, `SSH`)
 
+---
 
-***
+## 📚 Documentation Protocol
 
-## 🚀 Current System Highlights
+**Canonical Source:** Private Forgejo repository at `/mnt/data/sysadmin`  
+**Public Mirror:** This GitHub repository (sanitized for security)
 
-### Fedora Asahi Remix 42  (Apple Silicon M1)
+All major changes are:
+1. Implemented via version-controlled scripts
+2. Logged in `/mnt/data/sysadmin/changelog/`
+3. Sanitized and published to public GitHub mirror
+4. Tagged with ISO 8601 timestamps for audit trail
 
-- FHS‑compliant storage layout (`/mnt/data` primary)
-- SELinux enforcing  ·  firewalld active  ·  key‑only SSH
-- Forgejo (git) + Nextcloud stack with automated backups
+---
 
-\#\#\# Desktop Integration (Checkpoint 33)
-GNOME and KDE environments implemented under `ch1ch0` for demonstration of multi‑user, multi‑DE support via GDM.
+## 🎯 Portfolio Intent
 
-\#\#\# AI‑Coop Automation Pipelines (Checkpoint 34 +)
-Local AI agents assist in:
+This repository demonstrates:
+- **System Architecture:** FHS compliance, storage planning, service isolation
+- **Automation Discipline:** Infrastructure-as-code with shell scripting
+- **Security Engineering:** SELinux, firewalld, key-based auth, principle of least privilege
+- **Operational Maturity:** Backup/restore procedures, change management, documentation rigor
+- **Platform Expertise:** Fedora Asahi on Apple Silicon (cutting-edge hardware support)
 
-- Documentation generation and checkpoint logging (`ai‑handoff.md`)
-- CSV / Markdown synchronization via automated job tracker
-- Scheduled `system‑index` audits for SELinux and firewall integrity
+**Target Audience:** Hiring managers, DevOps/SRE teams, infrastructure engineers
 
-***
+**Live Demonstration:** [ch1ch0.me](https://ch1ch0.me) (personal domain showcasing integrated portfolio)
 
-## 💎 Public vs Private Structure
+---
 
-| Layer | Path | Visibility | Purpose |
-| :-- | :-- | :-- | :-- |
-| Public (repo) | `/mnt/data/srv‑m1m‑asahi` | Published to Forgejo + GitHub | Demonstrate skills \& audit workflow |
-| Private (admin) | `/mnt/data/admin` | Local‑only (secured by `.gitignore_admin`) | Contains keys, credentials, audit logs |
-| User workspace | `/mnt/data/ch1ch0` | Working space for daily tasks | Development, testing, and portfolio capture |
+## 🚀 Skills Showcase
 
-The `.gitignore_public` in this repo maintains a clean, security‑safe state while the admin repository retains sensitive details privately.
+- Linux system administration (Fedora, SELinux, systemd)
+- Shell scripting and automation (Bash, infrastructure-as-code)
+- Storage architecture (btrfs, FHS, data-device separation)
+- Service deployment (Forgejo, Nextcloud, containerization prep)
+- Security hardening (SSH, firewall, access control)
+- Version control (Git, Forgejo self-hosting, GitHub mirroring)
+- Documentation and change management
+- Apple Silicon Linux (Asahi Remix expertise)
 
-***
+---
 
-## ⚙️ Key Documents
+## 🔗 Repository Context
 
-| File | Function |
-| :-- | :-- |
-| `docs/system‑setup‑v1.0.md` | Complete baseline setup reference (Fedora Asahi installation → services) |
-| `docs/roadmap‑v1.0.md` | Checkpoint history and future milestones |
-| `docs/users.md` | Public user overview (redacted; admin version stored privately) |
-| `docs/ai‑handoff.md` | Human‑AI handoff protocol and checkpoint audit rules |
+**Public Repository:** `github.com/ch1ch0-FOSS/srv-m1m-asahi`  
+**Private Source:** Local Forgejo instance (credentials not disclosed)  
+**Mirroring:** Automated push to GitHub for portfolio visibility
 
+**Sanitization Policy:**
+- No credentials, API keys, or private IP details
+- Redacted personal information (government name, sensitive logs)
+- Public-safe scripts and documentation only
 
-***
+---
 
-## 📜 Best Practices
+## 📧 Contact
 
-- **Automation First:** Every repeatable administrative task is scripted.
-- **Documentation as Infrastructure:** Each change is logged and verified through checkpoint scripts.
-- **Security by Default:** Key‑only SSH, SELinux enforcing, limited wheel membership.
-- **Transparency through Version Control:** All system logic and test notes maintained in Git.
+**Professional Inquiries:** Via [ch1ch0.me](https://ch1ch0.me) contact form  
+**GitHub Profile:** [github.com/ch1ch0-FOSS](https://github.com/ch1ch0-FOSS)
 
-***
+---
 
-## 🧠 Skill Showcase
+## 📜 License
 
-- System Engineering on Apple Silicon Asahi hardware
-- Bash automation and GitOps discipline
-- Network and service security auditing
-- Backup and restore systems via `rsync` and `mysqldump`
-- Human‑AI collaboration for documented operations
+Documentation and scripts provided as-is for portfolio demonstration.  
+Adapt freely for learning; attribution appreciated.
 
-***
+---
 
-## 📬 For Reviewers / Collaborators
+**Last Updated:** 2025-25-26  
+**System Status:** Production-ready, actively maintained
 
-This repository demonstrates real‑world system administration capabilities and workflow design.
-Private data has been sanitized for public audit, with all critical logic retained for verifiability.
-Full operational scripts and unredacted docs exist within the `admin‑toolkit` repository on the same host.
-
-***
-
-## 🔗 Related Projects
-
-- **admin‑toolkit** — Private repository containing secure automation and audit records
-- **AI‑Coop** — Experimental AI‑administration frameworks and automation pipelines
-
-***
 
