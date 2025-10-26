@@ -1,310 +1,174 @@
-# Fedora Asahi M1 Server Baseline & Setup (v1.0)
+# Fedora Asahi M1 Server Baseline \& Setup (v1.0)
 
-_Audit-ready. FHS-aligned. Current as of 2025-09-18._
+_Audit-ready. FHS-aligned. Current as of 2025-10-25._
 
 ***
 
 ## 1. System Summary
 
-- **Host:** Mac Mini (Apple Silicon M1)
-- **OS:** Fedora Linux Asahi Remix 42, kernel 6.16+
-- **Hostname/IP:** srv-m1m-asahi (192.168.1.64, static)
-- **Main Storage:** `/mnt/data` (primary SSD), `/mnt/fastdata` (secondary SSD)
+- **Host:** Apple Silicon M1 (Mac Mini)
+- **OS:** Fedora Linux Asahi Remix 42 – Kernel 6.16+
+- **Hostname/IP:** Assigned statically for local network.
+- **Main Storage:**
+    - `/mnt/data` (primary SSD)
+    - `/mnt/fastdata` (secondary SSD)
 - **SELinux:** Enforcing
 
 ***
 
 ## 2. User Accounts and Privileges
 
-| User      | Home                | Shell         | Sudo   | Purpose              |
-|-----------|---------------------|-------------- |--------|----------------------|
-| admin     | /home/admin         | /usr/bin/zsh  | Yes    | System admin         |
-| ch1ch0    | /home/ch1ch0        | /bin/bash     | Yes    | Daily/personal use   |
-| git       | /home/git           | nologin       | No     | Forgejo/Git service  |
-| forgejo   | /mnt/data/forgejo   | nologin       | No     | Forgejo app data     |
-| nextcloud | /mnt/data/nextcloud | nologin       | No     | Nextcloud app data   |
-| trading   | /home/trading       | nologin       | No     | Trading tools/apps   |
-| bambulabs | /home/bambulabs     | nologin       | No     | 3D printing          |
-| canaan    | /home/canaan        | nologin       | No     | Mining/automation    |
+| User | Home | Shell | Sudo | Purpose |
+| :-- | :-- | :-- | :-- | :-- |
+| admin | custom path | zsh | Yes | System administrator |
+| ch1ch0 | custom path | bash | Yes | Daily use / portfolio |
+| git | custom path | nologin | No | Git service account |
+| forgejo | custom path | nologin | No | App/service data |
+| nextcloud | custom path | nologin | No | App/service data |
+| trading | custom path | zsh | No | Trading tools access |
 
-_Only `admin` and `ch1ch0` have sudo rights. All other users are service/data roles._
+_Only admin and ch1ch0 have sudo rights. All other users are for system services or app data only._
+
+***
+
+### Checkpoint 33 – GNOME \& KDE Multi-DE Integration (2025-10-25)
+
+**Purpose:** Add and document dual desktop environments for multi-user administration and workflow demonstration.
+
+**Artifacts:**
+
+- Generic install script, troubleshooting documentation, changelog entry (see repo for public version).
+
+**Key Lessons:**
+
+- Some display managers incompatible with home directory symlinks.
+- Alternatives selected to resolve login issues.
+- Directory permissions updated for session startup.
 
 ***
 
 ## 3. Security and Access
 
-- **SSH:** Key-based authentication (ed25519), no root login, no password auth.
-  ```
-  ssh-ed25519 AAAAC3Nza... ch1ch0@duck.com
-  ```
-- **SELinux:** Always Enforcing. Use `restorecon -Rv ~/.ssh` after .ssh changes.
-- **Firewall (firewalld):** Zone `public`. Allow only: SSH (22), HTTP (80), HTTPS (443)
-- **Essential commands:**
-  ```bash
-  sudo firewall-cmd --permanent --add-service={ssh,http,https}
-  sudo firewall-cmd --reload
-  sudo firewall-cmd --set-log-denied=all
-  ```
+- **SSH:** Key-based only (ed25519). Password login and root SSH disabled.
+- **SELinux:** Always enforcing.
+- **Firewall:** Zone “public”. Expose only necessary ports (SSH, HTTP, HTTPS).
+- **Important Commands:**
+Adjust firewall services and reload after changes.
+Run SELinux relabel commands after modifying `.ssh` or key materials.
 
 ***
 
 ## 4. Filesystem Organization
 
-- **SSD mountpoints:** `/mnt/data`, `/mnt/fastdata`
-- **Directory layout (FHS-aligned):**
-  - `/mnt/data/srv/[app]`      ← App/service data
-  - `/mnt/data/var/lib/[app]`  ← App persistent state
-  - `/mnt/data/var/log/[app]`  ← Logs
-  - `/mnt/data/etc/[app]`      ← Configs
-  - `/mnt/data/archive-old`    ← Previous/legacy installs
+- **Mountpoints:** `/mnt/data`, `/mnt/fastdata`
+- **Directory Layout (FHS-aligned):**
+    - `/mnt/data/srv/[app]`        – Service/app data
+    - `/mnt/data/var/lib/[app]`    – Persistent state
+    - `/mnt/data/var/log/[app]`    – Logs
+    - `/mnt/data/etc/[app]`        – Configs
+    - `/mnt/data/archive-old`      – Legacy/retired deployments
 
 ***
 
 ## 5. Checkpoint Timeline
 
-### 1. Install & Network  
-- OS, hostname, static IP; test SSH
+| Stage | Summary |
+| :-- | :-- |
+| Install \& Network | OS install, static IP, SSH test |
+| User / SSH / SELinux | User creation, sudo restriction, key auth |
+| Security / Firewall | Enable firewall, restrict ports/services |
+| System Update / Essentials | Update all, install core tools |
+| Sudoers / Group Audit | Confirm admin and limited wheel/group access |
+| Storage / Service Setup | Verify mounts, FHS layout, archive old data |
+| Multi-DE Integration | Add and validate additional desktop options |
 
-### 2. User/SSH/SELinux  
-- User/group creation, sudo restrict, key-only SSH, SELinux Enforcing
-
-### 3. Security/Firewall  
-- Enable firewalld, audit open services, maintain minimal exposure
-
-### 4. System Update/Essentials  
-- Update all; install `htop`, `vim`, `ncdu`, `git`, etc.; log audit with `rpm -qa`
-
-### 5. Sudoers & Group Audit  
-- Wheel is only admin/ch1ch0, document/cmd: `sudo -l`, `id admin`
-
-### 6. Storage & Service Setup  
-- SSD mounts, create FHS directory structure, archive obsolete data
 
 ***
 
 ## 6. Service Deployments
 
-### Forgejo  
-- Systemd service (user: git), MariaDB backend  
-- Repositories/data/logs: `/var/lib/forgejo/data`  
-- Web UI: `http://192.168.1.64:3000/`
+### Forgejo
 
-### Nextcloud  
-- RPM, MariaDB, PHP, Redis, SELinux context  
-- Data at `/mnt/data/nextcloud`, web: `/nextcloud`  
-- Mobile/web sync checked
+- Operates via systemd, uses MariaDB backend.
+- Repositories and logs stored per FHS.
+- Web UI available on assigned port.
 
-***
 
-## 7. Guidance & Lessons
+### Nextcloud
 
-- Always run `restorecon` after .ssh or SELinux changes
-- Log every change in this file
-- Use single-line public keys
-- Confirm login and sudo after user/shell/group updates
-- Backup `/mnt/data` and DBs often
-- Apply these standards to every new app/service
-provide me this in a ready to paste copy of these 7. ..... 
-
-if i currently try to copy and paste the provided output in is not in proper .md format
-
-Here is a **ready-to-paste section** for your `system-setup-v1.0.md` in clean and concise Markdown format, with headings and bullet points optimized for readability and retention:
+- RPM, MariaDB, PHP, Redis, SELinux context applied.
+- Data stored under designated FHS-aligned directories.
+- Sync and access verified across GUI and web.
 
 ***
 
-## 7. Automated Backup & Restore
+## 7. Automated Backup \& Restore
 
 ### 7.1 Automated Backup
 
-- **Script Path:**  
-  `/usr/local/bin/backup_nextcloud_forgejo.sh` – Backs up Nextcloud and Forgejo data, configs, logs, and SQL dumps.
-- **Backup Storage:**  
-  All backups are timestamped and saved under `/mnt/data/archive-old/`, following FHS (separate folders for each app’s data, configs, logs).
-- **Database Dumps:**  
-  MySQL/MariaDB databases (`nextcloud`, `nextclouddb`, `forgejo`) are included in every run using `mysqldump`. Files are named by date (e.g., `nextcloud-YYYYMMDD.sql`).
-- **Scheduling:**  
-  - **Cron:** Daily at 2:30AM.  
-    Edit root’s crontab and add:
-    ```
-    30 2 * * * /usr/local/bin/backup_nextcloud_forgejo.sh
-    ```
-  - **Systemd timer/service:**  
-    Files: `/etc/systemd/system/backup-nextcloud-forgejo.service` and `/etc/systemd/system/backup-nextcloud-forgejo.timer`  
-    Enable with:
-    ```
-    sudo systemctl enable --now backup-nextcloud-forgejo.timer
-    ```
-- **Backup Logging:**  
-  Script output can be appended to `/mnt/data/archive-old/backup.log` for auditing.
-- **Credential Handling:**  
-  Passwords managed via variable, `.my.cnf`, or vault; not stored in readable scripts.
-- **Permissions:**  
-  Script and dump files use `chmod 700` for security.
+- Unified backup script covers major services.
+- Backups stored using timestamped directories by service.
+- Database dumps included with each run.
+- Scheduling via cron or systemd timer.
+- Output logs to designated backup directory.
+- Credential handling: No credentials in plaintext scripts/logs; managed via system secrets or vaults.
+- Scripts and dump files: Strict permission enforced.
 
-***
 
-### 7.2 Restore Procedures
+### 7.2 Restore Procedure
 
-- **Data Restore Example:**  
-  ```
-  rsync -a /mnt/data/archive-old/<BACKUP-DIR>/ /mnt/data/srv/nextcloud/
-  rsync -a /mnt/data/archive-old/<BACKUP-DIR>/ /mnt/data/var/lib/nextcloud/
-  ```
-- **Database Restore Example:**  
-  ```
-  mysql -u root -p nextcloud < /mnt/data/archive-old/nextcloud-YYYYMMDD.sql
-  ```
-- **Full Restore Guide:**  
-  See `/mnt/data/docs/restore.md` for full details.
-- **Monthly Restore Test:**  
-  Practice test restores regularly and log all findings in `/mnt/data/logs/changelog.md`.
+- Restore files and databases using `rsync` and database import commands.
+- Recovery steps documented in restore guide.
+- Conduct routine simulated restores with audit logging.
 
-***
 
-### 7.3 Backup Retention & Cleanup
+### 7.3 Retention \& Cleanup
 
-- **Retention:**  
-  Backups are periodically reviewed; oldest are deleted as needed to manage disk usage.
-- **Cleanup:**  
-  (Optional) Use a cron job/script to prune backups older than a set interval.
+- Regular review and deletion of outdated backup sets.
+- Optional automated retention/prune scripts.
 
-***
-
-### 7.4 Guidance
-
-- Monitor backup log and verify new backup files after each scheduled run.
-- Update this documentation for any change in backup routines, credentials, or policies.
-- Extend backup scripts and docs for every new service before going live.
-
-***
-
-**Keep this section in version control. Backup, restore, and retention procedures are critical for continuity and audit compliance.**
-
-***
-
-This section is formatted for direct use in Markdown files and matches sysadmin standards.
-
-***
-
-**References**  
-https://www.redhat.com/sysadmin/backups-tar-rsync  
-https://wiki.archlinux.org/title/System_administration_best_practicesHere is a ready-to-paste, clean Markdown version of section 7 for your `system-setup-v1.0.md`:
-
-***
-
-## 7. Automated Backup & Restore
-
-### 7.1 Automated Backup
-
-- **Script Path:**  
-  `/usr/local/bin/backup_nextcloud_forgejo.sh` – All backup commands for Nextcloud and Forgejo.
-- **Backup Storage:**  
-  Backups stored in `/mnt/data/archive-old/` using timestamped folders, organized by service per FHS.
-- **Database Dumps:**  
-  MySQL/MariaDB (`nextcloud`, `nextclouddb`, `forgejo`) using `mysqldump`, named as `name-YYYYMMDD.sql`.
-- **Scheduling:**  
-    - **Cron:**  
-      ```
-      30 2 * * * /usr/local/bin/backup_nextcloud_forgejo.sh
-      ```
-    - **systemd timer:**  
-      Enable with:  
-      ```
-      sudo systemctl enable --now backup-nextcloud-forgejo.timer
-      ```
-- **Backup Logging:**  
-  Script output: `/mnt/data/archive-old/backup.log`.
-- **Credential Handling:**  
-  Use variables, `.my.cnf`, or vault—not hardcoded in scripts.
-- **Permissions:**  
-  Scripts and SQL dumps are `chmod 700`.
-
-***
-
-### 7.2 Restore Process
-
-- **Restore Data:**  
-  ```
-  rsync -a /mnt/data/archive-old/<BACKUP-DIR>/ /mnt/data/srv/nextcloud/
-  rsync -a /mnt/data/archive-old/<BACKUP-DIR>/ /mnt/data/var/lib/nextcloud/
-  ```
-- **Restore Database:**  
-  ```
-  mysql -u root -p nextcloud < /mnt/data/archive-old/nextcloud-YYYYMMDD.sql
-  ```
-- **Full Restore Guide:**  
-  `/mnt/data/docs/restore.md`
-- **Monthly Restore Test:**  
-  Required; log in `/mnt/data/logs/changelog.md`.
-
-***
-
-### 7.3 Retention & Cleanup
-
-- Review and prune old backups regularly.
-- Scripted auto-cleanup is recommended for long-term servers.
-
-***
 
 ### 7.4 Admin Guidance
 
-- Monitor logs (`/mnt/data/archive-old/backup.log`).
-- Update this documentation whenever routines are changed.
-- Extend backup/config for every deployed service.
+- Monitor and validate new backups, update documentation for changes.
+- Extend backup/restore to new services before production.
 
 ***
 
 ## 8. Next Steps
 
-- Finalize backup/snapshot scripts and disaster recovery docs
-- Audit sudo/groups monthly
-- Document new apps/services immediately in this file
-- Keep this in version control (Forgejo/Nextcloud)
+- Complete backup/disaster recovery documentation.
+- Verify backup rotation and retention.
+- Continue periodic audits and group/sudo reviews.
+- Document all future changes in the repository.
 
 ***
----
 
-## 9. AI‑COOP Integration (v2.0 Roadmap Segment)
+## 9. AI-COOP Integration (v2.0 Roadmap Segment)
 
-This branch extends the core Fedora Asahi infrastructure into a Human–AI cooperative environment designed to host automation pipelines, documentation workflows, and system intelligence modules that support both administrative and professional tasks.
+Expanding platform for Human–AI collaborative system administration, workflow automation, and portfolio documentation.
 
 **Focus Areas:**
-- Integrate AI and automation tooling under `/ai-coop/`
-- Maintain separation between system scripts (`/core/`), automation (`/automation/`), and Human–AI cooperation (`/ai-coop/`)
-- Expand `srv‑m1m‑asahi` from a personal infrastructure to a publishable portfolio and automation platform
 
-### Checkpoint 34 – AI‑Coop: Automated Job Tracker Conversion and CSV Pipeline (2025‑10‑24)
-**Description:**  
-Implemented a logging‑driven script (`checkpoint_automation_jobtracker.sh`) to convert and manage job application data across Markdown and CSV formats. Built to automate tracking, export to LibreOffice Calc, and commit updates to version control. This establishes an early fusion of AI documentation management and career operations automation.
-
-**Artifacts:**
-- `/ai-coop/jobtracker/checkpoint_automation_jobtracker.sh`
-- `/ai-coop/jobtracker/job-tracker-v2.md`
-- `/ai-coop/jobtracker/job-tracker-v2.csv`
-- Related commit: `Checkpoint 34 – Automation & Logging Pipeline`
-
-**Verification/Outcome:**
-- Markdown content converts into clean CSV via `awk` conversion.
-- Logs auto‑captured under `~/logs/`.
-- Prevents data drift through embedded Git commit routine.
-
----
-
-### Future Milestones (v2.0+)
-
-| Milestone | Target Date | Objective |
-|:---|:---|:---|
-| Checkpoint 35 – AI‑Coop DataSync Daemon | Nov 2025 | Automate push/pull between Forgejo and Nextcloud data nodes using REST sync. |
-| Checkpoint 36 – LLM Task Orchestration | Dec 2025 | Integrate local LLM model (supervised by Ollama/Nomic) to handle document generation tasks within `/docs/ai-coop`. |
-| Checkpoint 37 – AI‑SysState Auditor | Jan 2026 | Develop an AI‑cooperative audit agent to evaluate system state, generate SELinux/firewalld reports, and update `system-index.md`. |
-| Checkpoint 38 – Continuous Coop Pipeline | Mar 2026 | Establish a feedback loop between AI assistants and human system tasks, mirroring Forgejo to GitHub and documenting training checkpoints. |
-
----
-
-**AI‑COOP Roadmap Goal:**  
-Bridge human system administration skill development with AI‑based documentation and automation. Each AI‑COOP checkpoint will produce verifiable logs, committed scripts, and a paired `.md` file to serve as training evidence in your public portfolio.
+- Code, automation, and AI modules documented/demonstrated in public repo.
+- Separation of system, automation, and AI-coop content.
+- Routine milestones and checkpoints for technical growth.
 
 
-**Use this version as your single, authoritative system-setup baseline for audits, onboarding, and recovery. It is fully aligned with modern sysadmin best practices and ready to paste and track in your team's documentation.**
+### Future Milestones
 
+| Milestone | Target Date | Objective |
+| :-- | :-- | :-- |
+| DataSync Daemon | Nov 2025 | Automate service node sync across systems. |
+| LLM Task Orchestration | Dec 2025 | Integrate local language models for docgen. |
+| SysState Auditor | Jan 2026 | Automated audit agent for security/services. |
+| Continuous Coop | Mar 2026 | Long-term AI + Human feedback/training loop. |
+
+
+***
+
+**AI-COOP Goal:**
+Demonstrate technical and AI-assisted sysadmin workflows with visible, version-controlled documentation/artifacts.
+
+***
 

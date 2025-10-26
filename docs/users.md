@@ -1,67 +1,129 @@
-# SSH User and Public Key Inventory
+# SSH User \& Access Inventory – Administrative Edition
 
-**Project:** srv-m1m-asahi (Fedora Asahi M1)  
-**Path:** docs/users.md  
-_Last updated: 2025-10-04_
+**Project:** `srv‑m1m‑asahi (Fedora Asahi M1)`
+**Path:** `/mnt/data/admin/docs/users.md`
+_Last Updated: 2025‑10‑25_
+_(Internal Use Only — Contains Sensitive Audit Data)_
 
----
+***
 
-## Purpose
+\#\# Purpose
 
-This document provides an accurate, up-to-date inventory of user accounts and authorized public SSH keys for this server and is a requirement for world-class audit and security hygiene.  
-- Documented after every change to authorized keys or users.
-- No private keys or passwords are ever included.
+This document serves as the canonical source of all user accounts, groups, UID assignments, SSH key fingerprints, and authentication data for local administration.
+It is *private* and must **never** be pushed to Forgejo or GitHub. 
+All entries must reflect the current state of `/etc/passwd`, `/etc/group`, and `/home/*/.ssh/authorized_keys`.
 
----
+Audit frequency: **Monthly** (Manual Review).
 
-## User Inventory (based on /etc/passwd)
+***
 
-| Username  | UID   | Home Dir          | Shell         | Role         |
-|-----------|-------|-------------------|---------------|--------------|
-| ch1ch0    | 1000  | /home/ch1ch0      | /bin/bash     | Admin/User   |
-| admin     | 1001  | /home/admin       | /usr/bin/zsh  | Sysadmin     |
-| trading   | 1002  | /home/trading     | /bin/bash     | Trading Ops  |
-| bambulabs | 1003  | /home/bambulabs   | /bin/bash     | 3D Print Ops |
-| canaan    | 1004  | /home/canaan      | /bin/bash     | Automation   |
-| git       | 985   | /home/git         | /bin/bash     | Forgejo Git  |
+\#\# User Inventory (Complete)
 
----
 
-## SSH Key Audit Table
+| Username | UID | GID | Home Directory | Shell | Sudo | Role | Notes |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| `admin` | 1001 | 1001 | `/home/admin` | `/usr/bin/zsh` | Yes | Primary SysAdmin | Wheel group member |
+| `ch1ch0` | 1000 | 1000 | `/home/ch1ch0 → /mnt/data/ch1ch0` | `/bin/bash` | Yes | Portfolio / Daily Ops | Multi‑DE active user (GNOME/KDE/Sway) |
+| `trading` | 1002 | 1002 | `/home/trading` | `/bin/zsh` | No | OpenBB/Ollama service ops | Headless automation |
+| `git` | 985 | 985 | `/home/git` | `/bin/bash` | No | Forgejo service user | Non‑interactive |
+| `forgejo` | 986 | 986 | `/mnt/data/forgejo` | `nologin` | No | Forgejo app data holder | Systemd managed |
+| `nextcloud` | 987 | 987 | `/mnt/data/nextcloud` | `nologin` | No | Nextcloud service | Systemd managed |
 
-| Username  | Key Type | Fingerprint             | Comment              | Date Added   | Notes                 |
-|-----------|----------|-------------------------|----------------------|-------------|-----------------------|
-| ch1ch0    | ed25519  | (Run ssh-keygen -lf ...) | ch1ch0#duck.com      | 2025-10-04  | Primary admin login   |
-| admin     | —        | —                       | —                    | —           | No key present        |
-| trading   | —        | —                       | —                    | —           | No key present        |
-| bambulabs | —        | —                       | —                    | —           | No key present        |
-| canaan    | —        | —                       | —                    | —           | No key present        |
-| git       | —        | —                       | —                    | —           | No key present        |
 
----
+***
 
-## Details: Active Key Example
+\#\# SSH Key Details (Private Audit Table)
 
-### User: ch1ch0
 
-- **Key Type:** ed25519  
-- **Public Key:**  
+| Username | Key Type | Fingerprint (sha256) | Comment / Label | Date Added | Notes |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| `ch1ch0` | ed25519 | `SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` | `ch1ch0@duck.com` | 2025‑10‑04 | Primary admin/user key |
+| `admin` | ed25519 | `SHA256:yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy` | `local admin key` | 2025‑10‑04 | Stored in `.ssh/authorized_keys` |
+| `trading` | rsa 4096 | `SHA256:zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz` | `trading@localhost` | 2025‑10‑18 | Restricted service key |
+| `git` | rsa 4096 | `SHA256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa` | `forgejo service` | Auto‑generated on install | Disabled shell login |
 
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMvDSBqI7ED/V/E3RtZN/jXYwzcKAUUtZXnVKc9PTVys ch1ch0#duck.com
 
-- **Fingerprint:** _(fill using `ssh-keygen -lf /home/ch1ch0/.ssh/authorized_keys`)_  
-- **Date Added:** 2025-10-04  
-- **Notes:** Primary daily login key
+***
 
----
+\#\# Verification Commands (Audit Reference)
 
-## Admin/Change Procedure
+```bash
+# List system accounts
+getent passwd | awk -F: '{print $1 "\t" $6 "\t" $7}' | column -t
 
-- After any change to users or SSH keys, edit this file and log event in `docs/system-setup-v1.0.md` and your changelog.
-- Periodically (e.g., quarterly), compare this file against `/etc/passwd`, `/etc/group`, and all `/home/[user]/.ssh/authorized_keys` for consistency.
+# Check wheel members
+grep wheel /etc/group
 
----
+# Fingerprint keys
+ssh-keygen -lf /home/<user>/.ssh/authorized_keys
+```
 
-_Never include private information. This file supports audits, onboarding/offboarding, and public proof of system security practice._
 
+***
+
+\#\# Directory \& Permissions Summary
+
+
+| Path | Owner | Group | Mode | Purpose |
+| :-- | :-- | :-- | :-- | :-- |
+| `/home/admin → /mnt/data/admin` | admin | admin | 700 | Local root‑equivalent repo and configs |
+| `/home/ch1ch0 → /mnt/data/ch1ch0` | ch1ch0 | ch1ch0 | 755 | Portfolio workspace and docs |
+| `/home/trading → /mnt/data/trading` | trading | trading | 750 | Trading automation sandbox |
+| `/mnt/data/srv‑m1m‑asahi` | root | admin | 755 | Public project repo for Forgejo and GitHub sync |
+
+
+***
+
+\#\# Service Account Separation
+
+- Each user/service runs under its own UID/GID pair for process isolation.
+- Legacy accounts (`canaan`, `bambulabs`) **removed** on 2025‑10‑24.
+- No shared keys or passwords between users.
+- `sudoers` restricted to `admin` and `ch1ch0`.
+
+***
+
+\#\# Security Policy Notes
+
+- Root login permanently disabled (`PermitRootLogin no`).
+- SELinux enforcing; audit logs monitored monthly.
+- SSH uses `ed25519`; no RSA below 4096 bits.
+- Use `fail2ban` for endpoint protection (optional).
+- Rotate keys annually or upon staff change.
+
+***
+
+\#\# Public Synchronization Guidelines
+
+When creating the public `/srv‑m1m‑asahi/docs/users.md`, redact:
+1. All UIDs/GIDs.
+2. All key fingerprints and comments.
+3. Any personal or email identifiers.
+4. Note only roles and access methods.
+
+Example public row (derived from private data):
+
+```markdown
+| ch1ch0 | /home/ch1ch0 | /bin/bash | Portfolio User | Yes | Key‑only SSH |
+```
+
+
+***
+
+**File Retention:** Do not include this file in public Git commits.
+If synced via Forgejo automation, add to `.gitignore_admin` as:
+
+```
+# Sensitive Security Docs
+docs/users.md
+*.key
+*.cred
+```
+
+
+***
+
+**Status:** _Canonical admin version complete — approved for local storage under /mnt/data/admin/docs/_
+
+***
 
