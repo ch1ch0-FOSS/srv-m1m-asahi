@@ -1,7 +1,28 @@
-# Install Script Templates
+# Skel Directory
 
-This directory contains sanitized, reusable Bash templates for Linux application installs—both minimalist and modular/interactive. Use these as a starting point for your own system deployments. See script comments for guidance.
+**Purpose:** Full scaffolds for creating new documents, configs, and operational templates from scratch.
 
-- `install-minimal-template.sh` — 90-line deployer for quick package/app setup.
-- `install-modular-interactive-template.sh` — Advanced, highly-auditable skeleton with overrides, dependency handling, and post-install hooks.
+---
+
+## Available Skeletons
+
+- **`audit.skel`**: System audit report template.
+- **`changelog.skel`**: Structured changelog entry.
+- **`incident.skel`**: Incident report and postmortem.
+- **`session-log.skel`**: Human session summary.
+- **`upgrade-patch.skel`**: Upgrade/patch tracking.
+- **`autolog-gen-sh.skel`**: Script logging setup block.
+- **`header-docstring-sh.skel`**: Script header/metadata block.
+
+---
+
+## Usage
+
+Copy the appropriate `.skel` file and customize for your task.
+
+---
+
+## Maintenance
+
+Update skeletons as standards and best practices evolve.
 
