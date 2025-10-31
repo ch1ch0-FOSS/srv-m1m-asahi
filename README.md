@@ -1,210 +1,177 @@
-# srv-m1m-asahi: Fedora Asahi Linux Server Setup
+# srv-m1m-asahi
 
-**Platform:** Apple Silicon M1 Mac Mini  
-**OS:** Fedora Linux Asahi Remix 42  
-**Purpose:** Professional Linux system administration portfolio showcasing enterprise-grade server setup, automation, and multi-user environment configuration.
+> Fedora Asahi Remix server infrastructure on Apple Silicon M1 Mac Mini
 
----
+[![Fedora](https://img.shields.io/badge/Fedora-Asahi_Remix_42-51A2DA)](https://asahilinux.org/)
+[![Apple Silicon](https://img.shields.io/badge/Apple-M1-999999)](https://support.apple.com/en-us/HT211814)
+[![Shell](https://img.shields.io/badge/Shell-Bash%2FZsh-green)](https://www.gnu.org/software/bash/)
 
 ## Overview
 
-This repository documents a complete, production-ready Fedora Asahi Linux server build on Apple Silicon hardware. It demonstrates professional system administration practices including FHS compliance, security hardening, service orchestration, automated backups, and keyboard-centric workflow optimization.
+Production-ready Linux server infrastructure running on Apple Silicon. Demonstrates systems administration automation, security hardening, vim-toolkit workflow, and self-hosted service deployment (Forgejo, Nextcloud, trading tools).
 
-**Key Highlights:**
-- SELinux enforcing mode with hardened security configuration
-- Multi-user environment (sysadmin, developer, trader roles)
-- Self-hosted services: Forgejo (Git), Nextcloud (files), Ollama (AI/LLM)
-- Sway Wayland compositor with vim-universal keybindings
-- Fully automated installation and checkpoint scripts
-- Comprehensive documentation and troubleshooting guides
+**System:** Fedora Asahi Remix 42, Kernel 6.16+, SELinux enforcing, SSH key-only
 
----
+## Architecture
 
-## Quick Start
+### Infrastructure Stack
 
-```bash
-# Clone repository
-git clone https://github.com/yourusername/srv-m1m-asahi.git
-cd srv-m1m-asahi
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| **OS** | Fedora Asahi Remix 42 | ARM64 Linux for Apple Silicon |
+| **Window Manager** | Sway (Wayland) | Keyboard-first, vim-aligned compositor |
+| **Version Control** | Forgejo (self-hosted) | Local-first Git platform |
+| **Cloud Suite** | Nextcloud | File sync, collaboration |
+| **Database** | MariaDB | Backend for services |
+| **Firewall** | firewalld | Network security |
+| **SELinux** | Enforcing | Mandatory access control |
 
-# Review documentation
-cat docs/system-setup.md
-cat docs/system-index.md
+### User Roles
 
-# Run bootstrap (for fresh Fedora Asahi installation)
-chmod +x scripts/install/fedora_bootstrap.sh
-sudo ./scripts/install/fedora_bootstrap.sh
-
-# Run checkpoint installations in sequence
-chmod +x scripts/setup/setup_checkpoint_*.sh
-sudo ./scripts/setup/setup_checkpoint_01.sh
-# ... continue with remaining checkpoints
-```
-
----
-
-## Repository Structure
-
-| Directory | Description |
-|-----------|-------------|
-| **docs/** | Complete system documentation, guides, and wiki |
-| **scripts/** | Installation, setup, and automation scripts |
-| **scripts/install/** | Individual service installers (Forgejo, Nextcloud, etc.) |
-| **scripts/setup/** | Sequential checkpoint scripts for reproducible builds |
-| **scripts/automation/** | Backup and monitoring automation |
-| **scripts/templates/** | Reusable script templates and documentation skeletons |
-| **examples/** | Configuration examples and system screenshots |
-| **changelog/** | Chronological change history and audit trail |
-
----
-
-## System Specifications
-
-- **Hardware:** Apple Mac Mini (M1, 2020)
-- **CPU:** Apple M1 (8 cores) @ 2.99 GHz
-- **GPU:** Apple M1 (8 cores, integrated)
-- **Memory:** 16 GB
-- **Storage:** 
-  - Root: 162.70 GB (btrfs)
-  - Data mount: 7.28 TB (btrfs)
-  - Fast data: 1.82 TB (btrfs)
-- **Kernel:** Linux 6.16.8-400.asahi.fc42.aarch64+16k
-- **Display Server:** Wayland (Sway 1.10.1)
-- **Security:** SELinux Enforcing
-
----
+| User | Shell | Sudo | Purpose |
+|------|-------|------|---------|
+| `sysadmin` | zsh | Yes | System administration (vim-toolkit) |
+| `ch1ch0` | bash | Yes | Daily use, portfolio development (GUI) |
+| `trading` | zsh | No | Trading tools, OpenBB, ollama (GUI) |
+| `forgejo` | nologin | No | Git service daemon |
+| `nextcloud` | nologin | No | Cloud service daemon |
 
 ## Features
 
-### Services & Applications
-- **Forgejo:** Self-hosted Git server (port 3000, SSH 2222)
-- **Nextcloud:** Personal cloud storage and file sync
-- **MariaDB:** Database backend for services
-- **Ollama:** Local LLM for AI-assisted system administration
-- **OpenBB:** Financial market data and trading analysis
+**Security Hardening:**
+- SELinux enforcing mode
+- SSH key-only authentication (ed25519)
+- firewalld with minimal attack surface
+- Automated backup rotation
 
-### Desktop Environment
-- **Sway:** Tiling Wayland compositor with vim-universal keybindings
-- **Terminal:** foot (Wayland-native)
-- **Editor:** Neovim with extensive configuration
-- **File Manager:** vifm (vim-like file manager)
-- **Browser:** vimb (vim-like browser), LibreWolf (fallback)
-- **Application Launcher:** rofi (Wayland mode)
+**Vim-Universal Toolkit (sysadmin):**
+- **nvim** - Text editing, config management
+- **vifm** - File manager (vim keybinds)
+- **vimb** - Web browser (vim keybinds)
+- **tmux** - Terminal multiplexer
+- **foot** - Wayland terminal
+- **rofi** - Application launcher
+- **Sway** - Window manager (keyboard-first)
 
-### User Environments
-- **sysadmin:** System administration with keyboard-centric workflow
-- **ch1ch0:** Development and portfolio work
-- **trading:** Market analysis and trading tools
+**Services:**
+- Forgejo (port 2222 SSH, 3000 HTTP) - Self-hosted Git
+- Nextcloud - File sync and collaboration
+- ollama - LLM service for trading user
 
----
+## Directory Structure
+
+/mnt/data/
+├── srv/ # Service data (Forgejo, Nextcloud)
+├── var/lib/ # Persistent state
+├── var/log/ # Application logs
+├── etc/ # Service configs
+├── backups/ # Automated daily backups
+├── sysadmin/ # Admin toolkit, docs, scripts
+├── ch1ch0/ # Portfolio development
+└── trading/ # Trading tools, OpenBB
+
+
+## Getting Started
+
+### Prerequisites
+
+- Apple Silicon M1 Mac Mini
+- Fedora Asahi Remix installation media
+- SSH key pair for authentication
+
+### Installation Scripts
+
+All checkpoint scripts are reproducible and documented:
+
+Fedora bootstrap
+./scripts/fedora_bootstrap.sh
+
+Checkpoint installations (sequential)
+./scripts/setup_checkpoint_01.sh # Base system
+./scripts/setup_checkpoint_02.sh # Users and security
+./scripts/setup_checkpoint_03.sh # Forgejo
+./scripts/setup_checkpoint_04.sh # Nextcloud
+./scripts/setup_checkpoint_05.sh # Sway + vim-toolkit
+./scripts/setup_checkpoint_06.sh # Trading environment
+
+### Key Configuration Files
+
+- `/docs/system-setup.md` - Complete system baseline (v1.1.1)
+- `/docs/runbook.md` - Operational procedures
+- `/docs/00.system-index.md` - Directory structure reference
+- `~/.config/sway/config` - Sway window manager config
+- `/changelog/` - All system changes and checkpoints
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [System Setup](docs/system-setup.md) | Complete installation and configuration guide |
-| [System Index](docs/system-index.md) | Master reference for all files and services |
-| [Troubleshooting](docs/troubleshooting/) | Common issues and solutions |
-| [Wiki](docs/wiki/) | In-depth guides for specific services |
+| Document | Purpose |
+|----------|---------|
+| `system-setup.md` | Current system baseline and checkpoint history |
+| `runbook.md` | Daily operations, recovery procedures |
+| `00.system-index.md` | Directory structure mapping |
+| `security-hardening.md` | SELinux, firewall, SSH hardening |
+| `troubleshooting/` | Common issues and resolutions |
+| `changelog/` | Dated system change logs |
 
----
+## Version Control Workflow
 
-## Automation
+**Local-First Philosophy:**
+Primary: Forgejo (local source of truth)
+git push origin main
 
-### Installation Scripts
-All services can be installed via automated scripts in `scripts/install/`:
-- `fedora_bootstrap.sh` - Initial system setup
-- `install_forgejo.sh` - Git server setup
-- `install_nextcloud.sh` - Cloud storage setup
-- `install_librewolf.sh` - Privacy-focused browser
-- Additional service installers
+Mirror: GitHub (public portfolio)
+git push github main
 
-### Checkpoint System
-Reproducible builds via sequential checkpoints in `scripts/setup/`:
-- `setup_checkpoint_01.sh` through `setup_checkpoint_06.sh`
-- Each checkpoint is idempotent and documented
-- Enables version-controlled infrastructure as code
 
-### Backup Automation
-Automated backup scripts in `scripts/automation/backup/`:
-- `backup_all.sh` - Complete system backup
-- `backup_forgejo_dump.sh` - Git server backup
-- `backup_nextcloud.sh` - Cloud storage backup
-- Configured for scheduled execution via systemd timers
+All repositories use Forgejo built-in SSH (port 2222) for authentication.
 
----
+## Backups
 
-## Security & Compliance
+Automated daily backups to `/mnt/data/backups/`:
 
-- **SELinux:** Enforcing mode with custom policies
-- **Firewall:** firewalld with restrictive rules
-- **SSH:** Key-based authentication only, non-standard ports
-- **User Isolation:** Separate accounts with least-privilege access
-- **Audit Trail:** Comprehensive changelog and log retention
-- **Backup:** Nightly automated backups to dedicated storage
+Verify latest backup
+ls -lah /mnt/data/backups/ | tail -5
 
----
+Manual backup
+sudo rsync -av /mnt/data/ /mnt/fastdata/backup-$(date +%Y%m%d)/
 
-## Screenshots
 
-Visual demonstrations of the system can be found in `examples/screenshots/`:
-- Sway desktop environment
-- Multi-user configurations
-- Service dashboards
-- Terminal workflows
+## Checkpoint Timeline
 
----
+| Checkpoint | Date | Description |
+|------------|------|-------------|
+| CP33 | 2025-10-25 | GNOME & KDE multi-DE integration |
+| CP34 | 2025-10-26 | Local-first Git with Forgejo |
+| CP35 | 2025-10-27 | Sway Wayland compositor |
+| CP36 | 2025-10-27 | wlogout session management |
+| CP37 | 2025-10-28 | Vim-universal keybind finalization |
+| CP38 | 2025-10-30 | System audit & vim-toolkit consolidation |
+| CP39 | 2025-10-30 | Portfolio site deployment |
 
-## Professional Use Cases
+Full checkpoint history in `/changelog/` and `system-setup.md`.
 
-This repository demonstrates skills applicable to:
-- **DevOps/SRE:** Infrastructure as code, automation, monitoring
-- **Linux System Administration:** Multi-user management, service orchestration
-- **Security Engineering:** Hardening, compliance, audit trails
-- **Technical Documentation:** Comprehensive guides and runbooks
-- **Self-Hosted Infrastructure:** Privacy-focused alternative to cloud services
+## Security
 
----
-
-## Technologies Used
-
-**Operating System:** Fedora Asahi Remix 42, Linux 6.16+  
-**Display Server:** Wayland (Sway compositor)  
-**Version Control:** Git (Forgejo self-hosted)  
-**Databases:** MariaDB  
-**Programming/Scripting:** Bash, Python  
-**Containers:** Docker-ready (Podman support)  
-**Web Servers:** Nginx, PHP-FPM  
-**AI/ML:** Ollama (local LLM inference)  
-**Security:** SELinux, firewalld, SSH hardening  
-
----
+- **SSH:** Key-based only (ed25519), root login disabled
+- **SELinux:** Always enforcing
+- **Firewall:** Minimal ports (22, 80, 443, 2222)
+- **Backups:** Daily automated, tested monthly
 
 ## Contributing
 
-This is a personal portfolio project, but suggestions and feedback are welcome via issues.
-
----
+This is a personal infrastructure project. Issues and suggestions welcome via GitHub Issues. Public documentation provided for portfolio demonstration.
 
 ## License
 
-Documentation and scripts: MIT License  
-Configuration examples: Public Domain (CC0)
+Documentation: CC BY 4.0  
+Scripts: MIT License
 
 ---
 
-## Contact
+**Maintained by:** sysadmin  
+**System Version:** v1.1.1  
+**Last Updated:** 2025-10-30  
+**System:** Fedora Asahi Remix 42, Apple Silicon M1
 
-For questions about this setup or professional inquiries, see contact information in repository profile.
 
----
 
-## Acknowledgments
-
-- Asahi Linux team for Apple Silicon support
-- Fedora Project for excellent ARM64 support
-- Open source community for all the amazing tools
-
----
-
-*This repository showcases professional Linux system administration capabilities including automation, security, documentation, and infrastructure management suitable for DevOps, SRE, and system administrator roles.*
