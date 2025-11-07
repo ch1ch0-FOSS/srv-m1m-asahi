@@ -4,8 +4,6 @@ Backup strategy, recovery procedures, and tested incident response.
 
 ## Overview
 
-THIS IS THE MOST IMPORTANT DIRECTORY.
-
 Complete backup strategy. Monthly testing. Documented recovery procedures.
 
 ## Files
@@ -33,9 +31,4 @@ Complete backup strategy. Monthly testing. Documented recovery procedures.
 Recovery procedures are tested monthly.
 See MONTHLY-TEST-LOG.md for proof.
 
-## This Is Your Selling Point
 
-Most infrastructure teams don't test recovery.
-You do it monthly and document it.
-
-This is what hiring managers want to see.

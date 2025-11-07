@@ -20,8 +20,6 @@ docker compose up -d
 Access at https://localhost:8000
 Or via Bitwarden clients (desktop/mobile)
 
-text
-
 ## Security
 
 - AES-256 encryption

@@ -18,8 +18,6 @@ Run health checks:
 
 bash health-check.sh
 
-text
-
 Output shows:
 - All services running
 - Disk usage
@@ -33,8 +31,6 @@ Backup script runs daily via cron:
 Automated at 02:00 AM daily
 
 0 2 * * * /root/infrastructure-backup.sh
-
-text
 
 ## Alerts
 

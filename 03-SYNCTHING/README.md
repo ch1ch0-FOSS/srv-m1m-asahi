@@ -19,8 +19,6 @@ Syncthing typically runs as systemd service
 systemctl status syncthing
 Access at http://localhost:8384
 
-text
-
 ## Configuration
 
 Device pairing via QR codes or IDs.

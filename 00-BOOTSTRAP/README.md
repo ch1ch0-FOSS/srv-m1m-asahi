@@ -84,12 +84,6 @@ After successful bootstrap:
 
 ---
 
-## Why this matters
-
-This is your professional, auditable, provable approach to infrastructure buildout—**the starting point no production setup should skip.** Reviewers and employers will recognize your operations maturity and readiness for disaster/tested recovery.
-
----
-
 **Author:** ch1ch0 ([profile](https://github.com/ch1ch0-FOSS), [website](https://www.ch1ch0.me))
 
 

@@ -1,0 +1,24 @@
+# packages.txt
+# Minimal, intentional set required for infra/deployment bootstrap
+# (Fedora base packages are assumed present.)
+
+dnf install
+
+curl                    # Data transfer and scripting (infra automation)
+wget                    # CLI downloads (forgtj/temp workaround)
+git                     # Version control (git, Forgejo, scripts)
+vim                     # Minimal editing (infra troubleshooting)
+htop                    # System resource monitor (infra debug)
+tree                    # Directory visualization (docs/testing)
+unzip                   # Handle compressed source/extras
+tar                     # Core archive expansion/backup scripting
+rsync                   # Data movement & backups (infra, disaster recovery)
+firewalld               # Network security/Baseline hardening
+fail2ban                # Basic brute force protection
+zsh                     # Preferred shell (infra user bootstrap/consistency)
+tmux                    # Terminal multiplexing for remote work/persistent sessions
+openssh-server          # Secure remote login (core to infra management)
+bind-utils              # DNS tools for troubleshooting (infra/ops)
+net-tools               # Legacy netstat/etc for old sys scripts
+policycoreutils-python-utils # SELinux utils for service runtime permissions
+
