@@ -1,0 +1,21 @@
+<!-- Example Syncthing config.xml (sanitized) -->
+<configuration version="40">
+  <folder id="default" label="SyncFolder" path="/var/syncthing/sync" type="sendreceive">
+    <device id="DEVICE1ID"/>
+    <device id="DEVICE2ID"/>
+  </folder>
+  <device id="DEVICE1ID" name="srv-m1m-asahi" introducer="false"/>
+  <device id="DEVICE2ID" name="laptop" introducer="false"/>
+  <gui enabled="true" tls="false">
+    <address>0.0.0.0:8384</address>
+    <user>admin</user>
+    <password>hashed-password-goes-here</password>
+  </gui>
+  <options>
+    <listenAddress>0.0.0.0:22000</listenAddress>
+    <globalAnnounceServer>default</globalAnnounceServer>
+    <natEnabled>true</natEnabled>
+    <localAnnounceEnabled>true</localAnnounceEnabled>
+  </options>
+</configuration>
+
